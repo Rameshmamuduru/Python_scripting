@@ -1,0 +1,32 @@
+2025-01-10 11:22:01,145 - app.main - INFO - Application started successfully
+2025-01-10 11:22:01,146 - app.main - INFO - Loading configuration file...
+
+2025-01-10 11:22:01,150 - app.config - WARNING - Config key 'retry_count' missing, using default value 3
+2025-01-10 11:22:01,155 - app.database - INFO - Connecting to database...
+
+2025-01-10 11:22:01,310 - app.database - ERROR - Failed to connect to database: ConnectionTimeoutError
+2025-01-10 11:22:01,311 - app.database - INFO - Retrying DB connection...
+
+2025-01-10 11:22:02,012 - app.database - INFO - Database connection established successfully
+
+2025-01-10 11:22:03,100 - app.user - INFO - Login attempt for user: john_doe
+2025-01-10 11:22:03,200 - app.user - WARNING - User password strength is low for user: john_doe
+
+2025-01-10 11:22:03,350 - app.payment - ERROR - Payment processing failed: CardExpiredError
+
+2025-01-10 11:22:03,500 - app.server - CRITICAL - Server reached maximum memory limit! Shutting down immediately!
+
+2025-01-10 11:22:03,350 - app.payment - ERROR - Payment processing failed: CardExpiredError
+2025-01-10 11:22:03,350 - app.payment - ERROR - Payment processing failed: CardExpiredError
+2025-01-10 11:22:03,350 - app.payment - ERROR - Payment processing failed: CardExpiredError
+
+2025-01-10 11:22:03,500 - app.server - CRITICAL - Server reached maximum memory limit! Shutting down immediately!
+
+2025-01-10 11:22:03,200 - app.user - WARNING - User password strength is low for user: john_doe
+2025-01-10 11:22:03,200 - app.user - WARNING - User password strength is low for user: john_doe
+2025-01-10 11:22:03,200 - app.user - WARNING - User password strength is low for user: john_doe
+
+2025-01-10 11:22:03,200 - app.user - WARNING - User password strength is low for user: john_doe
+
+
+

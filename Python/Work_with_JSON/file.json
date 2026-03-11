@@ -1,0 +1,13 @@
+{
+
+    "app_name": "Test_App",
+    "version": "5.1.1",
+    "data_base": {
+        "host":     "localhost",
+        "DB_name": "Test_DB",
+        "port": "5432"
+    },
+
+    "features": ["login", "Payments", "Dashboard"]
+
+}

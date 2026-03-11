@@ -1,0 +1,10 @@
+DEBUG:__main__:checking if the name is a space
+e name is a space
+2025-12-09 11:55:10,239 - DEBUG - checking if the name is a space
+2025-12-09 11:55:19,125 - DEBUG - checking if the name is a space
+2025-12-09 11:55:20,065 - DEBUG - checking if the name is a space
+2025-12-09 11:55:20,917 - DEBUG - checking if the name is a space
+2025-12-09 11:58:08,562 - DEBUG - checking if the name is a space
+2025-12-09 12:01:43,510 - DEBUG - checking if the name is a space
+2025-12-09 12:01:52,509 - DEBUG - checking if the name is a space
+2025-12-09 12:02:31,100 - my_test_logger - DEBUG - checking if the name is a space

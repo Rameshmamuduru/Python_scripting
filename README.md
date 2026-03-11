@@ -1,5 +1,4 @@
 # Python_scripting
-Great 👍 Since you’re working with **Docker, Kubernetes, Jenkins, and databases**, here are **5 real-world Python automation projects used by DevOps engineers** with simple architecture explanations.
 
 # 1. Kubernetes Auto-Healing Monitor ☸️
 

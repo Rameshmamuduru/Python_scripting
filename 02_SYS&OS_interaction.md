@@ -1,7 +1,3 @@
-Absolutely! Let’s go **module by module** and explain exactly what each of these does in the context of **DevOps scripting**, with examples of how you’d use them in real scenarios.
-
----
-
 ## 1️⃣ `os` – Operating System Interaction
 
 **Purpose:**

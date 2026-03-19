@@ -916,3 +916,98 @@ for log in Path("/tmp/logs").rglob("*.log"):
 | `pathlib`    | Handle file paths cleanly and safely      |
 
 ---
+# Final List of Used Commands
+Perfect! Let’s create a **final, consolidated list of the most used Python commands/functions in DevOps scripting** from all five modules (`os`, `sys`, `subprocess`, `shutil`, `pathlib`) that you can rely on for **automation, CI/CD, Kubernetes, Docker, and pipelines**. I’ve structured it by **module → command → purpose → example**.
+
+---
+
+# **1️⃣ OS Module (`os`) – Environment & System**
+
+| Command / Function                 | Purpose                         | Example                                      |
+| ---------------------------------- | ------------------------------- | -------------------------------------------- |
+| `os.getenv("VAR", default)`        | Read environment variable       | `env = os.getenv("KUBE_CONTEXT", "dev")`     |
+| `os.environ["VAR"] = value`        | Set/update env var              | `os.environ["ENV"] = "stage"`                |
+| `os.environ.items()`               | List all environment variables  | `for k,v in os.environ.items(): print(k,v)`  |
+| `"VAR" in os.environ`              | Check if env var exists         | `if "HOME" in os.environ: ...`               |
+| `os.path.exists(path)`             | Check if file/folder exists     | `os.path.exists("/tmp/config.yaml")`         |
+| `os.path.join(path1, path2)`       | Safe path join                  | `os.path.join("/tmp","logs")`                |
+| `os.makedirs(path, exist_ok=True)` | Create directories recursively  | `os.makedirs("/tmp/backups", exist_ok=True)` |
+| `os.remove(path)`                  | Delete a file                   | `os.remove("/tmp/app.log")`                  |
+| `os.rename(src,dst)`               | Rename/move file                | `os.rename("old.txt","new.txt")`             |
+| `os.listdir(path)`                 | List files/folders in directory | `files = os.listdir("/tmp")`                 |
+| `os.system(cmd)`                   | Run simple shell command        | `os.system("ls -l")`                         |
+| `os.name` / `os.platform`          | Get OS info                     | `print(os.name)`                             |
+
+---
+
+# **2️⃣ SYS Module (`sys`) – Script Control & Runtime Info**
+
+| Command / Function                 | Purpose                    | Example                              |
+| ---------------------------------- | -------------------------- | ------------------------------------ |
+| `sys.argv`                         | Command-line arguments     | `env = sys.argv[1]`                  |
+| `len(sys.argv)`                    | Count arguments            | `if len(sys.argv)<2: sys.exit()`     |
+| `sys.exit([status/message])`       | Exit script                | `sys.exit("Config missing!")`        |
+| `sys.platform`                     | OS platform info           | `print(sys.platform)`                |
+| `sys.version` / `sys.version_info` | Python version info        | `print(sys.version)`                 |
+| `sys.executable`                   | Path to Python interpreter | `print(sys.executable)`              |
+| `sys.stdout.write()`               | Print to stdout            | `sys.stdout.write("Deploying...\n")` |
+| `sys.stderr.write()`               | Print to stderr            | `sys.stderr.write("Error!\n")`       |
+
+---
+
+# **3️⃣ Subprocess Module (`subprocess`) – Running CLI Commands**
+
+| Command / Function                                     | Purpose                                           | Example                                                                    |                             |
+| ------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------- |
+| `subprocess.run(args, capture_output=True, text=True)` | Run command and capture output                    | `subprocess.run(["kubectl","get","pods"], capture_output=True, text=True)` |                             |
+| `subprocess.check_call(args)`                          | Run command, raise exception if fails             | `subprocess.check_call(["docker","build","."])`                            |                             |
+| `subprocess.check_output(args)`                        | Run command, get output, raise exception if fails | `output = subprocess.check_output(["git","status"], text=True)`            |                             |
+| `subprocess.Popen(args, stdout=PIPE, stderr=PIPE)`     | Advanced: real-time interaction                   | `proc = subprocess.Popen(["kubectl","logs","my-pod"], stdout=PIPE)`        |                             |
+| `env` parameter                                        | Pass environment vars                             | `subprocess.run(["echo","$MY_ENV"], env=os.environ.copy(), shell=True)`    |                             |
+| `cwd`                                                  | Run command in specific directory                 | `subprocess.run(["ls"], cwd="/tmp")`                                       |                             |
+| `shell=True`                                           | Run shell command with pipes                      | `subprocess.run("kubectl get pods                                          | grep Running", shell=True)` |
+
+---
+
+# **4️⃣ Shutil Module (`shutil`) – File & Directory Operations**
+
+| Command / Function                                 | Purpose                      | Example                                                        |
+| -------------------------------------------------- | ---------------------------- | -------------------------------------------------------------- |
+| `shutil.copy(src, dst)`                            | Copy a file                  | `shutil.copy("config.yaml","/tmp/config.yaml")`                |
+| `shutil.copy2(src,dst)`                            | Copy file + metadata         | `shutil.copy2("config.yaml","/tmp/config.yaml")`               |
+| `shutil.copytree(src,dst)`                         | Copy entire directory        | `shutil.copytree("app/","/tmp/app_backup")`                    |
+| `shutil.move(src,dst)`                             | Move or rename               | `shutil.move("app.log","/var/logs/app.log")`                   |
+| `shutil.rmtree(path)`                              | Delete directory recursively | `shutil.rmtree("/tmp/old_logs")`                               |
+| `shutil.make_archive(base_name, format, root_dir)` | Create archive               | `shutil.make_archive("/tmp/deploy","zip","deployment_folder")` |
+| `shutil.unpack_archive(filename, extract_dir)`     | Extract archive              | `shutil.unpack_archive("/tmp/deploy.zip","/tmp/restore")`      |
+| `shutil.disk_usage(path)`                          | Check disk usage             | `total, used, free = shutil.disk_usage("/")`                   |
+| `shutil.which(cmd)`                                | Locate command in PATH       | `shutil.which("docker")`                                       |
+
+---
+
+# **5️⃣ Pathlib Module (`pathlib`) – Modern File Paths**
+
+| Command / Function                                        | Purpose                     | Example                                                |
+| --------------------------------------------------------- | --------------------------- | ------------------------------------------------------ |
+| `Path("file")`                                            | Create path object          | `config = Path("deployment.yaml")`                     |
+| `Path.cwd()`                                              | Current working directory   | `cwd = Path.cwd()`                                     |
+| `Path.home()`                                             | Home directory              | `home = Path.home()`                                   |
+| `path.exists()`                                           | Check if file/folder exists | `if config.exists(): ...`                              |
+| `path.is_file()` / `path.is_dir()`                        | Check type                  | `if config.is_file(): ...`                             |
+| `path.mkdir(parents=True, exist_ok=True)`                 | Create directory            | `Path("/tmp/logs").mkdir(parents=True, exist_ok=True)` |
+| `path / "subfile"` or `path.joinpath()`                   | Join paths                  | `file_path = Path("/tmp") / "app.log"`                 |
+| `path.read_text()` / `path.write_text()`                  | Read/write text file        | `data = config.read_text()`                            |
+| `path.stat()`                                             | File metadata               | `size = config.stat().st_size`                         |
+| `path.iterdir()`                                          | Iterate folder              | `for f in Path("/tmp").iterdir(): print(f)`            |
+| `path.glob("*.yaml")` / `path.rglob("*.log")`             | Find files matching pattern | `for f in Path("/tmp").rglob("*.log"): print(f)`       |
+| `path.unlink()`                                           | Delete file                 | `file_path.unlink()`                                   |
+| `path.parent` / `path.name` / `path.stem` / `path.suffix` | Path properties             | `print(config.name, config.suffix, config.parent)`     |
+
+---
+
+### ✅ Key Takeaways
+
+* **`os` + `pathlib`** → File system & environment handling
+* **`sys`** → Script arguments & runtime control
+* **`subprocess`** → Run CLI commands (`kubectl`, `docker`, `git`)
+* **`shutil`** → Backup, move, delete, archive files/folders

@@ -30,7 +30,106 @@ print(f"Using Kubernetes context: {kube_context}")
 if os.path.exists("/tmp/config.yaml"):
     print("Config exists")
 ```
+Ah! Now I understand — you want to know **how many useful “commands” (functions/attributes) are available in the `os` module**, especially those used in **DevOps scripting**. Let’s go **deep and structured**.
 
+---
+
+# 🔹 1️⃣ Environment Variables Functions
+
+| Function / Usage                 | Purpose                                         |
+| -------------------------------- | ----------------------------------------------- |
+| `os.environ`                     | Dictionary-like access to environment variables |
+| `os.environ.get("VAR", default)` | Read env variable safely                        |
+| `os.environ.items()`             | Iterate over all env vars                       |
+| `os.environ.keys()`              | Get list of env var names                       |
+| `os.environ.values()`            | Get list of env var values                      |
+| `os.environ["VAR"] = value`      | Set/update env var                              |
+| `os.environ.pop("VAR", None)`    | Delete env var safely                           |
+| `del os.environ["VAR"]`          | Delete env var (raises KeyError if not exists)  |
+
+---
+
+# 🔹 2️⃣ File & Directory Handling
+
+| Function / Usage                   | Purpose                             |
+| ---------------------------------- | ----------------------------------- |
+| `os.path.exists(path)`             | Check if file or folder exists      |
+| `os.path.isfile(path)`             | Check if path is a file             |
+| `os.path.isdir(path)`              | Check if path is a directory        |
+| `os.path.join(path1, path2, …)`    | Safely join paths                   |
+| `os.path.abspath(path)`            | Absolute path of a file             |
+| `os.path.basename(path)`           | Get file name                       |
+| `os.path.dirname(path)`            | Get directory name                  |
+| `os.makedirs(path, exist_ok=True)` | Create directories recursively      |
+| `os.remove(path)`                  | Delete a file                       |
+| `os.rmdir(path)`                   | Delete empty directory              |
+| `os.rename(src, dst)`              | Rename file/directory               |
+| `os.listdir(path)`                 | List all files/folders in directory |
+
+---
+
+# 🔹 3️⃣ Process & System Functions
+
+| Function / Usage | Purpose                                         |
+| ---------------- | ----------------------------------------------- |
+| `os.system(cmd)` | Run a shell command (simple, returns exit code) |
+| `os.getpid()`    | Get current Python process ID                   |
+| `os.getppid()`   | Get parent process ID                           |
+| `os.name`        | OS name (`posix`, `nt`, etc.)                   |
+| `os.uname()`     | Detailed OS info (Linux/Unix only)              |
+| `os.getcwd()`    | Current working directory                       |
+| `os.chdir(path)` | Change working directory                        |
+| `os.cpu_count()` | Number of CPUs                                  |
+| `os.getlogin()`  | Logged-in username                              |
+
+---
+
+# 🔹 4️⃣ Permissions & File Metadata
+
+| Function / Usage           | Purpose                                           |
+| -------------------------- | ------------------------------------------------- |
+| `os.chmod(path, mode)`     | Change file permissions                           |
+| `os.chown(path, uid, gid)` | Change file owner (Linux)                         |
+| `os.stat(path)`            | Get file metadata (size, created, modified, etc.) |
+| `os.utime(path, times)`    | Update file timestamps                            |
+
+---
+
+# 🔹 5️⃣ Path & Temporary File Utilities
+
+| Function / Usage             | Purpose                             |
+| ---------------------------- | ----------------------------------- |
+| `os.path.expanduser("~")`    | Get home directory                  |
+| `os.path.expandvars("$VAR")` | Expand env variables in a string    |
+| `os.path.splitext(path)`     | Split filename and extension        |
+| `os.path.normpath(path)`     | Normalize path (removes `..`, `//`) |
+
+---
+
+# 🔹 6️⃣ Advanced OS Functions (Optional but useful in DevOps)
+
+| Function / Usage       | Purpose                                       |
+| ---------------------- | --------------------------------------------- |
+| `os.fork()`            | Fork a new process (Unix only)                |
+| `os.execvp()`          | Replace process with another process          |
+| `os.kill(pid, signal)` | Kill a process                                |
+| `os.pipe()`            | Create a pipe for inter-process communication |
+| `os.walk(path)`        | Recursively walk directories                  |
+
+---
+
+### ✅ Key Takeaways for DevOps Scripting
+
+In **real DevOps automation**, the most commonly used are:
+
+1. **Env vars:** `os.environ`, `os.getenv()`, `os.environ.items()`
+2. **File/Directory:** `os.path.exists()`, `os.listdir()`, `os.makedirs()`, `os.remove()`
+3. **Run commands:** `os.system()` (though `subprocess` is preferred)
+4. **Paths:** `os.path.join()`, `os.path.expanduser()`
+
+Everything else (`chmod`, `stat`, `fork`) is **advanced or platform-specific**.
+
+---
 ---
 
 ## 2️⃣ `sys` – System-Specific Parameters

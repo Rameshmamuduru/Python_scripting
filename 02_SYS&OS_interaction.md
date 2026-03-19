@@ -158,8 +158,155 @@ if len(sys.argv) < 2:
 env = sys.argv[1]
 print(f"Deploying to {env}")
 ```
+Absolutely! First, here’s a **clear statement describing the role of `sys` in DevOps Python scripting**, similar to what we did for `os`:
 
 ---
+
+**Statement:**
+
+> “In DevOps Python scripts, the `sys` module is used to access command-line arguments, control script exit behavior, interact with the Python runtime environment, and get system-level information such as the platform, module paths, and interpreter details, allowing automation scripts to be dynamic, robust, and environment-aware.”
+
+---
+
+Now, let’s go **deep and structured** for `sys` just like we did for `os`.
+
+---
+
+# 🔹 1️⃣ Command-Line Arguments
+
+| Function / Usage            | Purpose                                                            |
+| --------------------------- | ------------------------------------------------------------------ |
+| `sys.argv`                  | List of arguments passed to the script (first item is script name) |
+| `len(sys.argv)`             | Number of arguments                                                |
+| `sys.argv[1], sys.argv[2]…` | Access individual arguments                                        |
+
+**Example:**
+
+```python
+import sys
+
+if len(sys.argv) < 2:
+    sys.exit("Usage: python deploy.py <environment>")
+
+env = sys.argv[1]
+print(f"Deploying to {env}")
+```
+
+---
+
+# 🔹 2️⃣ Script Exit Control
+
+| Function / Usage            | Purpose                                                          |
+| --------------------------- | ---------------------------------------------------------------- |
+| `sys.exit([status])`        | Exit script with optional status code (0 = success, 1 = failure) |
+| `sys.exit("error message")` | Print error and exit                                             |
+
+**Example:**
+
+```python
+import sys
+
+if not config_exists:
+    sys.exit("Config file missing. Exiting script.")
+```
+
+---
+
+# 🔹 3️⃣ Python Runtime Info
+
+| Function / Usage   | Purpose                                         |
+| ------------------ | ----------------------------------------------- |
+| `sys.version`      | Python version string                           |
+| `sys.version_info` | Python version tuple (major, minor, micro)      |
+| `sys.executable`   | Path to Python interpreter being used           |
+| `sys.platform`     | Current platform (Linux, Windows, etc.)         |
+| `sys.path`         | List of directories Python searches for modules |
+| `sys.modules`      | Dictionary of currently loaded modules          |
+
+**Example:**
+
+```python
+import sys
+
+print("Python version:", sys.version)
+print("Platform:", sys.platform)
+print("Interpreter path:", sys.executable)
+```
+
+---
+
+# 🔹 4️⃣ Standard Streams
+
+| Function / Usage | Purpose                       |
+| ---------------- | ----------------------------- |
+| `sys.stdout`     | Default output stream (print) |
+| `sys.stderr`     | Error output stream           |
+| `sys.stdin`      | Standard input stream         |
+
+**Example:**
+
+```python
+import sys
+
+sys.stdout.write("Deploying application...\n")
+sys.stderr.write("Warning: Pod not ready!\n")
+```
+
+---
+
+# 🔹 5️⃣ Module & Resource Management
+
+| Function / Usage       | Purpose                                |
+| ---------------------- | -------------------------------------- |
+| `sys.getsizeof(obj)`   | Get memory size of object              |
+| `sys.getrefcount(obj)` | Reference count for debugging          |
+| `sys.modules`          | Access all loaded modules              |
+| `sys.path`             | Dynamically modify module search paths |
+
+**Example:**
+
+```python
+import sys
+
+sys.path.append("/custom/lib")
+```
+
+---
+
+# 🔹 6️⃣ Exception & Traceback Handling
+
+| Function / Usage                                        | Purpose                                             |
+| ------------------------------------------------------- | --------------------------------------------------- |
+| `sys.exc_info()`                                        | Get current exception info (type, value, traceback) |
+| `sys.last_type`, `sys.last_value`, `sys.last_traceback` | Last exception info in interactive mode             |
+
+**Example:**
+
+```python
+import sys
+
+try:
+    1 / 0
+except:
+    exc_type, exc_value, exc_tb = sys.exc_info()
+    print(f"Error: {exc_type} - {exc_value}")
+```
+
+---
+
+### ✅ Key Takeaways for DevOps
+
+In **real DevOps scripting**, the most commonly used parts of `sys` are:
+
+1. **CLI arguments:** `sys.argv`
+2. **Exit control:** `sys.exit()`
+3. **Runtime info:** `sys.platform`, `sys.version`
+4. **Streams:** `sys.stdout`, `sys.stderr`
+
+Other functions (`sys.modules`, `sys.path`, `sys.getsizeof`) are **advanced or for debugging/automation frameworks**.
+
+---
+
 
 ## 3️⃣ `subprocess` – Running Shell Commands ⭐
 

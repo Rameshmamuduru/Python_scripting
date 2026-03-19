@@ -330,8 +330,185 @@ import subprocess
 result = subprocess.run(["kubectl", "get", "pods"], capture_output=True, text=True)
 print(result.stdout)
 ```
+Perfect! Let’s do the **same deep-dive for `subprocess`** as we did for `os` and `sys`. I’ll first give you a **statement** describing its role, then go module by module with **all the commonly used commands/functions, purpose, and examples**.
 
 ---
+
+# 🔹 Statement for `subprocess`
+
+> “In DevOps Python scripts, the `subprocess` module is used to execute and control external system commands and programs, capture their output or errors, and manage return codes. It allows automation scripts to interact with CLI tools like `kubectl`, `docker`, `git`, or any shell command, making Python scripts capable of full system-level automation.”
+
+---
+
+# 🔹 1️⃣ Running Simple Commands
+
+| Function / Usage                          | Purpose                                                                 |
+| ----------------------------------------- | ----------------------------------------------------------------------- |
+| `subprocess.run(args, **kwargs)`          | Run a command, wait for completion, returns a `CompletedProcess` object |
+| `subprocess.call(args, **kwargs)`         | Run a command, returns exit code only (simpler, legacy)                 |
+| `subprocess.check_call(args, **kwargs)`   | Run command, raises exception if exit code != 0                         |
+| `subprocess.check_output(args, **kwargs)` | Run command, returns output, raises exception if exit code != 0         |
+
+**Example:**
+
+```python id="svq9h2"
+import subprocess
+
+# Run kubectl get pods
+result = subprocess.run(["kubectl", "get", "pods"], capture_output=True, text=True)
+print(result.stdout)
+```
+
+---
+
+# 🔹 2️⃣ Capture Output
+
+| Parameter                | Purpose                              |
+| ------------------------ | ------------------------------------ |
+| `capture_output=True`    | Capture stdout and stderr as strings |
+| `stdout=subprocess.PIPE` | Redirect stdout                      |
+| `stderr=subprocess.PIPE` | Redirect stderr                      |
+| `text=True`              | Return strings instead of bytes      |
+
+**Example:**
+
+```python id="7i9klo"
+result = subprocess.run(
+    ["docker", "ps"],
+    capture_output=True,
+    text=True
+)
+print("Containers running:\n", result.stdout)
+```
+
+---
+
+# 🔹 3️⃣ Handling Return Codes
+
+| Attribute                       | Purpose                                                               |
+| ------------------------------- | --------------------------------------------------------------------- |
+| `result.returncode`             | Exit code of command (0 = success)                                    |
+| `subprocess.CalledProcessError` | Exception raised by `check_call` or `check_output` if returncode != 0 |
+
+**Example:**
+
+```python id="v4r9pl"
+try:
+    subprocess.check_call(["kubectl", "apply", "-f", "deployment.yaml"])
+    print("Deployment successful")
+except subprocess.CalledProcessError as e:
+    print(f"Deployment failed with code {e.returncode}")
+```
+
+---
+
+# 🔹 4️⃣ Running Shell Commands
+
+| Parameter    | Purpose                                            |
+| ------------ | -------------------------------------------------- |
+| `shell=True` | Run command in the shell (allows pipes, redirects) |
+
+**Example:**
+
+```python id="c1d4zr"
+subprocess.run("kubectl get pods | grep Running", shell=True)
+```
+
+⚠️ **Warning:** Only use `shell=True` if you trust input to avoid security issues.
+
+---
+
+# 🔹 5️⃣ Passing Environment Variables
+
+| Parameter | Purpose                                                   |
+| --------- | --------------------------------------------------------- |
+| `env`     | Pass a dictionary of environment variables to the command |
+
+**Example:**
+
+```python id="h7m4yz"
+import os
+
+env_vars = os.environ.copy()
+env_vars["MY_ENV"] = "dev"
+
+subprocess.run(["echo", "$MY_ENV"], env=env_vars, shell=True)
+```
+
+---
+
+# 🔹 6️⃣ Advanced: Communicating with Process
+
+| Function / Usage                   | Purpose                                         |
+| ---------------------------------- | ----------------------------------------------- |
+| `subprocess.Popen()`               | Start process, allows **real-time interaction** |
+| `proc.communicate(input)`          | Send/receive data to process stdin/stdout       |
+| `proc.terminate()` / `proc.kill()` | Stop process                                    |
+
+**Example:**
+
+```python id="l2r8jk"
+from subprocess import Popen, PIPE
+
+proc = Popen(["kubectl", "logs", "my-pod"], stdout=PIPE, stderr=PIPE, text=True)
+stdout, stderr = proc.communicate()
+print("Logs:", stdout)
+```
+
+---
+
+# 🔹 7️⃣ Other Useful Parameters
+
+| Parameter    | Purpose                                          |
+| ------------ | ------------------------------------------------ |
+| `cwd`        | Run command in specific directory                |
+| `timeout`    | Timeout for process execution                    |
+| `check=True` | Automatically raise exception if returncode != 0 |
+
+**Example:**
+
+```python id="k4p9mz"
+subprocess.run(
+    ["docker", "build", "-t", "myapp:latest", "."],
+    cwd="/home/user/project",
+    timeout=300,
+    check=True
+)
+```
+
+---
+
+# ✅ Key Takeaways for DevOps
+
+1. **Most commonly used:** `subprocess.run()` with `capture_output=True` and `text=True`
+2. **Check status:** Use `returncode` or `check=True`
+3. **Env variables:** Use `env` parameter to pass runtime environment
+4. **Advanced:** `Popen` for real-time stdout/stderr streaming or interactive processes
+5. **Shell commands:** Only use `shell=True` if necessary
+
+---
+
+# 🔹 Real DevOps Scenario Using `subprocess`
+
+```python id="y4v7ml"
+import subprocess
+
+# Deploy app
+result = subprocess.run(["kubectl", "apply", "-f", "deployment.yaml"], capture_output=True, text=True)
+if result.returncode != 0:
+    print("Deployment failed!")
+    print(result.stderr)
+else:
+    print("Deployment successful!")
+    # Get pods
+    pods = subprocess.run(["kubectl", "get", "pods"], capture_output=True, text=True)
+    print(pods.stdout)
+```
+
+This is exactly **how DevOps scripts automate deployments, check pod status, and log results**.
+
+---
+
 
 ## 4️⃣ `shutil` – File Operations
 
@@ -357,8 +534,154 @@ shutil.copy("config.yaml", "/tmp/config_backup.yaml")
 # Move a log file
 shutil.move("app.log", "/var/logs/app.log")
 ```
+Perfect! Let’s do the **same in-depth explanation for `shutil`** as we did for `os`, `sys`, and `subprocess`. I’ll start with a **statement**, then go through **all commonly used functions with purpose and examples**, so you can use it confidently in **DevOps Python scripting**.
 
 ---
+
+# 🔹 Statement for `shutil`
+
+> “In DevOps Python scripts, the `shutil` module is used for **high-level file and directory operations** such as copying, moving, deleting, and archiving files or folders. It simplifies file management tasks like backing up configuration files, moving logs, cleaning temporary directories, or preparing deployment packages.”
+
+---
+
+# 🔹 1️⃣ Copying Files and Directories
+
+| Function / Usage            | Purpose                                                      |
+| --------------------------- | ------------------------------------------------------------ |
+| `shutil.copy(src, dst)`     | Copy a file to a destination (metadata may not be preserved) |
+| `shutil.copy2(src, dst)`    | Copy a file and preserve metadata (timestamps)               |
+| `shutil.copytree(src, dst)` | Recursively copy a directory to a new location               |
+
+**Example:**
+
+```python id="sht1"
+import shutil
+
+# Copy single file
+shutil.copy("config.yaml", "/tmp/config_backup.yaml")
+
+# Copy entire directory
+shutil.copytree("myapp/", "/tmp/myapp_backup")
+```
+
+---
+
+# 🔹 2️⃣ Moving or Renaming Files and Directories
+
+| Function / Usage        | Purpose                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| `shutil.move(src, dst)` | Move a file or directory (can also rename)                     |
+| `os.rename(src, dst)`   | Can also rename (but less flexible for cross-filesystem moves) |
+
+**Example:**
+
+```python id="sht2"
+# Move a log file to archive
+shutil.move("/var/log/app.log", "/var/log/archive/app.log")
+```
+
+---
+
+# 🔹 3️⃣ Deleting Files and Directories
+
+| Function / Usage      | Purpose                                             |
+| --------------------- | --------------------------------------------------- |
+| `os.remove(path)`     | Delete a single file (from `os` module)             |
+| `shutil.rmtree(path)` | Delete a directory and all its contents recursively |
+
+**Example:**
+
+```python id="sht3"
+# Remove a temp directory and all its contents
+shutil.rmtree("/tmp/myapp_logs")
+```
+
+---
+
+# 🔹 4️⃣ Archiving and Compressing
+
+| Function / Usage                                   | Purpose                                            |
+| -------------------------------------------------- | -------------------------------------------------- |
+| `shutil.make_archive(base_name, format, root_dir)` | Create a zip, tar, or other archive of a directory |
+| `shutil.unpack_archive(filename, extract_dir)`     | Extract an archive                                 |
+
+**Example:**
+
+```python id="sht4"
+# Create a zip archive of deployment files
+shutil.make_archive("/tmp/deployment_backup", "zip", "deployment_folder")
+
+# Extract the archive
+shutil.unpack_archive("/tmp/deployment_backup.zip", "/tmp/deployment_restore")
+```
+
+---
+
+# 🔹 5️⃣ Disk Usage and File System Info
+
+| Function / Usage          | Purpose                                             |
+| ------------------------- | --------------------------------------------------- |
+| `shutil.disk_usage(path)` | Returns total, used, and free space of filesystem   |
+| `shutil.which(cmd)`       | Locate a command in the PATH (like `which kubectl`) |
+
+**Example:**
+
+```python id="sht5"
+# Check disk space
+total, used, free = shutil.disk_usage("/")
+print(f"Total: {total}, Free: {free}")
+
+# Check if docker is installed
+docker_path = shutil.which("docker")
+print("Docker path:", docker_path)
+```
+
+---
+
+# 🔹 6️⃣ Other Useful Functions
+
+| Function / Usage                                            | Purpose                                             |
+| ----------------------------------------------------------- | --------------------------------------------------- |
+| `shutil.chown(path, user=None, group=None)`                 | Change ownership of file/directory                  |
+| `shutil.move()` + `os.makedirs()`                           | Combine to move files and ensure destination exists |
+| `shutil.copytree()` with `dirs_exist_ok=True` (Python 3.8+) | Merge directories instead of error                  |
+
+---
+
+# ✅ Key Takeaways for DevOps
+
+1. **Backup / Restore configs:** `shutil.copy`, `shutil.copytree`
+2. **Archive deployments:** `shutil.make_archive`, `shutil.unpack_archive`
+3. **Move / Organize logs:** `shutil.move`
+4. **Clean temp directories:** `shutil.rmtree`
+5. **Check disk space or commands:** `shutil.disk_usage`, `shutil.which`
+
+---
+
+# 🔹 Real DevOps Scenario Using `shutil`
+
+```python id="sht6"
+import shutil
+from pathlib import Path
+
+# Backup deployment configs
+Path("/tmp/backups").mkdir(exist_ok=True)
+shutil.copy("deployment.yaml", "/tmp/backups/deployment.yaml")
+
+# Archive current deployment folder
+shutil.make_archive("/tmp/deployment_backup", "zip", "deployment_folder")
+
+# Move logs to archive
+shutil.move("/var/log/app.log", "/var/log/archive/app.log")
+
+# Clean old temp logs
+shutil.rmtree("/tmp/temp_logs", ignore_errors=True)
+```
+
+✅ This is exactly how DevOps scripts **automate backup, archiving, moving, and cleanup tasks**.
+
+---
+
 
 ## 5️⃣ `pathlib` – Modern File Path Handling
 
@@ -388,8 +711,199 @@ if config_path.exists():
 # Create directory if not exists
 Path("/var/log/myapp").mkdir(parents=True, exist_ok=True)
 ```
+Perfect! Let’s do the **same deep-dive for `pathlib`**, just like we did for `os`, `sys`, `subprocess`, and `shutil`. I’ll first give a **statement**, then go function by function with **purpose, examples, and DevOps use cases**.
 
 ---
+
+# 🔹 Statement for `pathlib`
+
+> “In DevOps Python scripts, the `pathlib` module is used for **modern, object-oriented file system path handling**. It simplifies operations like creating directories, checking file existence, joining paths, and reading/writing files, while making scripts **cross-platform** (Linux, Windows, Mac) safe and clean.”
+
+---
+
+# 🔹 1️⃣ Creating Path Objects
+
+| Function / Usage     | Purpose                                   |
+| -------------------- | ----------------------------------------- |
+| `Path("filename")`   | Create a path object for a file or folder |
+| `Path("/some/path")` | Absolute or relative paths                |
+| `Path.home()`        | Get home directory of the current user    |
+| `Path.cwd()`         | Get current working directory             |
+
+**Example:**
+
+```python id="plb1"
+from pathlib import Path
+
+config = Path("deployment.yaml")        # relative path
+home_dir = Path.home()                  # /home/user or C:\Users\User
+current_dir = Path.cwd()                # current working directory
+```
+
+---
+
+# 🔹 2️⃣ Checking Existence and Type
+
+| Function / Usage | Purpose                      |
+| ---------------- | ---------------------------- |
+| `path.exists()`  | Check if file/folder exists  |
+| `path.is_file()` | Check if path is a file      |
+| `path.is_dir()`  | Check if path is a directory |
+
+**Example:**
+
+```python id="plb2"
+if config.exists() and config.is_file():
+    print("Deployment config found")
+```
+
+---
+
+# 🔹 3️⃣ Creating Directories
+
+| Function / Usage                            | Purpose                                             |
+| ------------------------------------------- | --------------------------------------------------- |
+| `path.mkdir(parents=False, exist_ok=False)` | Create a directory                                  |
+| `parents=True`                              | Create intermediate directories if they don’t exist |
+| `exist_ok=True`                             | Don’t raise error if directory exists               |
+
+**Example:**
+
+```python id="plb3"
+logs_dir = Path("/var/log/myapp")
+logs_dir.mkdir(parents=True, exist_ok=True)
+```
+
+---
+
+# 🔹 4️⃣ Joining Paths
+
+| Operator / Function                      | Purpose                                            |
+| ---------------------------------------- | -------------------------------------------------- |
+| `path / "subfolder"`                     | Join paths safely (overrides `/` issues across OS) |
+| `path.joinpath("subfolder", "file.txt")` | Same as `/` operator                               |
+
+**Example:**
+
+```python id="plb4"
+file_path = logs_dir / "app.log"
+file_path2 = logs_dir.joinpath("app2.log")
+print(file_path, file_path2)
+```
+
+---
+
+# 🔹 5️⃣ Reading and Writing Files
+
+| Function / Usage         | Purpose                |
+| ------------------------ | ---------------------- |
+| `path.read_text()`       | Read text file content |
+| `path.read_bytes()`      | Read file as bytes     |
+| `path.write_text(data)`  | Write text to file     |
+| `path.write_bytes(data)` | Write bytes to file    |
+
+**Example:**
+
+```python id="plb5"
+# Read deployment config
+content = config.read_text()
+print(content)
+
+# Write logs
+file_path.write_text("Deployment started...\n")
+```
+
+---
+
+# 🔹 6️⃣ File Properties and Metadata
+
+| Function / Usage | Purpose                                   |
+| ---------------- | ----------------------------------------- |
+| `path.name`      | File or folder name                       |
+| `path.stem`      | Filename without extension                |
+| `path.suffix`    | File extension                            |
+| `path.parent`    | Parent directory path                     |
+| `path.stat()`    | File metadata (size, modified time, etc.) |
+
+**Example:**
+
+```python id="plb6"
+print("File name:", config.name)
+print("Extension:", config.suffix)
+print("Parent folder:", config.parent)
+print("Size:", config.stat().st_size, "bytes")
+```
+
+---
+
+# 🔹 7️⃣ Iterating Over Directories
+
+| Function / Usage      | Purpose                                 |
+| --------------------- | --------------------------------------- |
+| `path.iterdir()`      | Iterate over files/folders in directory |
+| `path.glob("*.yaml")` | Find files matching pattern             |
+| `path.rglob("*.log")` | Recursive glob (all subdirectories)     |
+
+**Example:**
+
+```python id="plb7"
+for file in Path("/tmp/backups").glob("*.yaml"):
+    print("Backup file:", file)
+```
+
+---
+
+# 🔹 8️⃣ Deleting Files or Folders
+
+| Function / Usage      | Purpose                                                       |
+| --------------------- | ------------------------------------------------------------- |
+| `path.unlink()`       | Delete a file                                                 |
+| `shutil.rmtree(path)` | Delete a directory recursively (use with pathlib Path object) |
+
+**Example:**
+
+```python id="plb8"
+# Delete old log
+if file_path.exists():
+    file_path.unlink()
+```
+
+---
+
+# 🔹 Key Takeaways for DevOps
+
+1. **Cross-platform safe path handling** → Use `/` operator
+2. **Check existence before operations** → `exists()`, `is_file()`, `is_dir()`
+3. **Create directories automatically** → `mkdir(parents=True, exist_ok=True)`
+4. **File read/write operations** → `read_text()`, `write_text()`
+5. **Glob and iterate directories** → Useful for backups, configs, or logs
+6. **Combine with `shutil`** → Move, copy, delete directories
+
+---
+
+# 🔹 Real DevOps Scenario Using `pathlib`
+
+```python id="plb9"
+from pathlib import Path
+import shutil
+
+# Paths
+config = Path("/etc/myapp/deployment.yaml")
+backup_dir = Path("/tmp/backups")
+backup_dir.mkdir(parents=True, exist_ok=True)
+
+# Backup deployment config
+shutil.copy(config, backup_dir / config.name)
+
+# Read backup content
+backup_file = backup_dir / config.name
+print("Backup content:", backup_file.read_text())
+
+# Delete old temp logs
+for log in Path("/tmp/logs").rglob("*.log"):
+    log.unlink()
+```
+
 
 ### ✅ Summary of Roles in DevOps
 

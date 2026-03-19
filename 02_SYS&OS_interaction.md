@@ -7,8 +7,9 @@ Absolutely! Let’s go **module by module** and explain exactly what each of the
 **Purpose:**
 
 * Access **environment variables**
-* Work with **file paths**
+* Work with **file paths handling** and **File System Operations**
 * Interact with the OS (like checking if a file exists, creating directories)
+* And process management
 
 **DevOps Use Cases:**
 
